@@ -80,7 +80,7 @@ Edit `js/config.js` to customize settings:
 ```javascript
 const CONFIG = {
     // Custom API server URL
-    API_URL: 'http://localhost:3000/api',
+    API_URL: window.location.origin + '/api',
     
     // Matrix configuration
     MATRIX: {
@@ -96,6 +96,21 @@ const CONFIG = {
     }
 };
 ```
+
+### Production Configuration
+
+For production deployment:
+
+1. **CORS Configuration**: Update `server/index.js` to restrict CORS origins:
+   ```javascript
+   app.use(cors({
+       origin: 'https://your-domain.com'
+   }));
+   ```
+
+2. **HTTPS**: Always use HTTPS in production for secure connections
+
+3. **Environment Variables**: Use `.env` file for sensitive configuration
 
 ## Usage
 

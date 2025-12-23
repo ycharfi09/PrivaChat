@@ -1,7 +1,8 @@
 // Configuration for PrivaChat
 const CONFIG = {
     // Custom API server URL (for profiles, XP, stats)
-    API_URL: 'http://localhost:3000/api',
+    // Uses relative URL to work in any deployment environment
+    API_URL: window.location.origin + '/api',
     
     // Matrix configuration
     MATRIX: {

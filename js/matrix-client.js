@@ -7,14 +7,31 @@ const MatrixClientModule = {
     // Initialize and login to Matrix
     async login(homeserver, username, password) {
         try {
+            // Basic input validation
+            if (!homeserver || !homeserver.trim()) {
+                throw new Error('Homeserver URL is required');
+            }
+            if (!username || !username.trim()) {
+                throw new Error('Username is required');
+            }
+            if (!password || !password.trim()) {
+                throw new Error('Password is required');
+            }
+            
+            // Validate homeserver URL format
+            const urlPattern = /^https?:\/\/.+/;
+            if (!urlPattern.test(homeserver.trim())) {
+                throw new Error('Invalid homeserver URL format');
+            }
+
             // Create Matrix client
             this.client = matrixcs.createClient({
-                baseUrl: homeserver
+                baseUrl: homeserver.trim()
             });
 
             // Login
             const response = await this.client.login('m.login.password', {
-                user: username,
+                user: username.trim(),
                 password: password
             });
 
@@ -22,7 +39,7 @@ const MatrixClientModule = {
 
             // Reinitialize client with access token
             this.client = matrixcs.createClient({
-                baseUrl: homeserver,
+                baseUrl: homeserver.trim(),
                 accessToken: response.access_token,
                 userId: response.user_id
             });

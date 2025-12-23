@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const Database = require('better-sqlite3');
 const path = require('path');
 
@@ -33,7 +32,7 @@ console.log('Database initialized');
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 
 // API Routes
@@ -111,9 +110,18 @@ app.post('/api/stats/:userId', (req, res) => {
     const { userId } = req.params;
     const { type, increment } = req.body;
     
-    if (!type || !['xp', 'messages', 'calls'].includes(type)) {
+    // Whitelist of valid stat types mapped to safe column names
+    const validStatTypes = {
+        'xp': 'xp',
+        'messages': 'messages',
+        'calls': 'calls'
+    };
+    
+    if (!type || !validStatTypes[type]) {
         return res.status(400).json({ error: 'Invalid stat type' });
     }
+    
+    const columnName = validStatTypes[type];
     
     try {
         // Ensure stats record exists
@@ -123,10 +131,10 @@ app.post('/api/stats/:userId', (req, res) => {
             stmt.run(userId);
         }
         
-        // Update the specific stat
+        // Update the specific stat using parameterized query
         const stmt = db.prepare(`
             UPDATE stats 
-            SET ${type} = ${type} + ?, last_updated = strftime('%s', 'now')
+            SET ${columnName} = ${columnName} + ?, last_updated = strftime('%s', 'now')
             WHERE user_id = ?
         `);
         
