@@ -69,6 +69,19 @@ app.put('/api/profile/:userId', (req, res) => {
     const { userId } = req.params;
     const { display_name, avatar_url, bio } = req.body;
     
+    // Input validation
+    if (display_name && display_name.length > 100) {
+        return res.status(400).json({ error: 'Display name too long (max 100 characters)' });
+    }
+    
+    if (avatar_url && avatar_url.length > 500) {
+        return res.status(400).json({ error: 'Avatar URL too long (max 500 characters)' });
+    }
+    
+    if (bio && bio.length > 500) {
+        return res.status(400).json({ error: 'Bio too long (max 500 characters)' });
+    }
+    
     try {
         const stmt = db.prepare(`
             INSERT INTO profiles (user_id, display_name, avatar_url, bio)
