@@ -1,0 +1,25 @@
+{
+  "name": "privachat",
+  "version": "1.0.0",
+  "description": "A private self-hosted calling app using Matrix protocol",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "keywords": [
+    "matrix",
+    "chat",
+    "webrtc",
+    "privacy",
+    "encrypted"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^9.2.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.2.1"
+  }
+}
